@@ -42,11 +42,23 @@ Get weight from Nokia Health and update to Garmin Connect or Smashrun.
             ./nokia-weight-sync.py -k CLIENT_ID -s CLIENT_SECRET setup smashrun_code
             
 4. Verify that the relevant sections for the services are added to ```config.ini```.
+
+5. For domogik use only, append theses informations in the file ```config.ini```. You must set before the plugin **body** (https://github.com/fritz-smh/domogik-plugin-body) on your domogik host.
+
+          [domogik]
+          last_sync =
+          domogik_rest_url = the rest url of your domogik host
+          weight_id = the id of the command on domogik to set weight
+          fat_id = the id of the command on domogik to set fat %
+          muscle_id = the id of the command on domogik to set muscle %
+          water_id = the id of the command on domogik to set water %
+          bone_id = the id of the command on domogik to set bone %
         
-5. Synchronize (new) measurements:
+6. Synchronize (new) measurements:
 
         ./nokia-weight-sync.py sync garmin
         ./nokia-weight-sync.py sync smashrun
+        ./nokia-weight-sync.py sync domogik 
         
 **Important** Nokia Health API, Smashrun API, and Garmin Connect credentials are stored in ```config.ini```. If this file is compromised your Garmin Connect account, personal health data from Nokia Health, and activity data from Smashrun are at risk.
         
