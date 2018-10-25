@@ -22,7 +22,9 @@ import getpass
 import base64
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import parse_qs, urlparse
+import requests
 import ssl
+import json
 
 nokia_auth_code = None
 
@@ -396,6 +398,25 @@ elif command == 'sync':
         if resp.status_code == 200:
             print('Weight has been successfully updated to Smashrun!')
             config.set('smashrun','last_sync', str(m.date.timestamp))
+
+    elif service == 'domogik':
+
+        for m in groups:
+            weight = m.get_measure(types['weight'])
+            percent_fat=m.get_measure(types['fat_ratio'])
+            percent_hydration=m.get_measure(types['hydration'])
+            bone_mass=m.get_measure(types['bone_mass'])
+            muscle_mass=m.get_measure(types['muscle_mass'])
+        url = config.get('domogik','domogik_host') + config.get('domogik','weight_id') + "?value={0}".format(weight)
+        r = requests.get(url, verify=False)
+        url = config.get('domogik','domogik_host') + config.get('domogik','fat_id') + "?value={0}".format(percent_fat)
+        r = requests.get(url, verify=False)
+        url = config.get('domogik','domogik_host') + config.get('domogik','muscle_id') + "?value={0}".format(muscle_mass)
+        r = requests.get(url, verify=False)
+        url = config.get('domogik','domogik_host') + config.get('domogik','water_id') + "?value={0}".format(percent_hydration)
+        r = requests.get(url, verify=False)
+        url = config.get('domogik','domogik_host') + config.get('domogik','bone_id') + "?value={0}".format(bone_mass)
+        r = requests.get(url, verify=False)
 
     else:
         print('Unknown service (%s), available services are: nokia, garmin, smashrun')
